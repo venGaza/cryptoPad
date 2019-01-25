@@ -1,6 +1,6 @@
 # CryptoPad
 
-This is a CLI RNG fantasy combat program built in C++ . This game allows the player to do tournament style battle with fantasy characters taking turns attacking the other player. Players can even team up and build a team of up to 10 players to challenge an opponent. The player will be able to choose from the following characters: Barbarian, Vampire, Blue Men, Medusa, and the feared Harry Potter! Each character posseses a unique special ability to allow them to conquer their opponent. Have fun and challenge a few of your friends to this thrilling combat adventure!   
+In cryptography, the one-time pad (OTP) is an encryption technique that cannot be cracked, but requires the use of a one-time pre-shared key the same size as, or longer than, the message being sent ([Wikipedia](https://en.wikipedia.org/wiki/One-time_pad)). This program aims to emulate this cryptography technique and allows users to generate keys, encrypt, and decrypt messages. The program is currently designed to run on just one server, but can be modified to run across multiple servers.   
 
 ## Getting Started
 
@@ -30,47 +30,61 @@ Then run the following command to build the project:
 compileCryptoPad
 ```
 
-### Playing the game
+### Generate a key 
 
-To play the game run the following command:
-
-```
-bin/FantasyGame
-```
-
-The screen should display the following information if the installation was successful:
+Run the following command to generate a key for the program to use for encryption and decryption:
 
 ```
-Welcome to the Fantasy Combat Game! This game allows the player to do tournament style battle with fantasy characters. The player can choose between the following: Barbarian, Vampire, Blue Men, Medusa, and the feared Harry Potter! Each character posseses a unique special ability to allow them to conquer their opponent. Enjoy!!! 
+keygen <numberOfCharactersDesired>  > <desiredKeyFileName>
 
-              Menu
----------------------------------
-1. Play Game
-2. Exit
+#example
+
+keygen 20 > keygen1
+
+ls
+
+keygen1.txt
+
+**Make sure to generate key that has longer character length than the message that will be encrypted
 ```
 
-You will navigate throught the world using the numbered options. In this case you would enter 1 + enter to start the game. 
+### Start the daemons 
 
-### Errors compiling the game
-
-Try running the following command if there was an error compiling the game:
+To start the server daemons in the background run the following code:
 
 ```
-make remake
+encrypt-daemon <portNum> &
+decrypt-daemon <portNum> &
+
+**portNum = the port number the daemon will listen for requests
 ```
 
-## Uninstalling
-
-If you wish to remove the binary and objects, run the following command:
+### Encrypt a message
 
 ```
-make cleaner
+encrypt-client <encryptionKeyFile> <portNumberOfDaemon> > <outputFileName>
+
+#example
+
+encrypt-client plain1 key70000 3000 > cipher1
 ```
 
-or for a full uninstall
+### Decrypt a message
 
 ```
-cd ..; rm -rf starwars
+decrypt-client <encryptionKeyFile> <portNumberOfClient> > <outputFileName>
+
+#example
+
+decrypt-client cipher1 key70000 3000 > plainRead1
+```
+
+### Stopping servers
+
+Once you are done with the program, you can use the following command to stop the servers:
+
+```
+killall -q -u $USER encrypt-daemon* decrypt-daemon
 ```
 
 ## Built With
@@ -90,3 +104,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 * Oregon State University
 * [Beej's Guide to Socket Programming](https://beej.us/guide/bgnet/html/multi/index.html) 
+* [Wikipedia](https://en.wikipedia.org/wiki/One-time_pad)
